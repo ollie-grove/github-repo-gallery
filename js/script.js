@@ -10,6 +10,10 @@ const allRepos = document.querySelector(".repos");
 
 const repoData = document.querySelector(".repo-data"); 
 
+const backToGalleryButton = document.querySelector(".view-repos"); 
+
+const filterInput = document.querySelector(".filter-repos"); 
+
 //Async function to fetch information from GitHub profile. Target the "users" endpoint and use temperate literal to add the global username variable to the endpoint. 
 
 const gitUserInfo = async function () {
@@ -57,6 +61,7 @@ const gitRepos = async function () {
 
 //Display info about each repo. Use repos as a parameter so the function accepts the data returned from the last API call. Inside the function, loop and create a list item for each repo and give each item a class of repo and an h3 element. 
 const displayRepos = function(repos) {
+    filterInput.classList.remove("hide"); 
     for (repo of repos) {
         const repoItem = document.createElement("li"); 
         repoItem.classList.add("repo"); 
@@ -111,6 +116,30 @@ const displayRepoInformation = function (repoInfo, languages) {
         <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on Github!</a>
     `;
     repoData.append(div); 
-
 };
 
+//Create a click event listener that points back to the back to repo gallery button. In the callback function, diplay the section class "repos", (the location where all the repo information appears). Add the "hide" class to the section where the individual repo data appears. Add the "hide" class to the back to repo gallery button itself. In the function for displaying individual repo info, remove the class of "hide" from the back to repo gallery button. Now the user will see the Back to repo galley button when they click on a repo name. When the click the back button, they'll return to the complete list of repos. The individual repo information and the back button will then disappear. 
+
+backToGalleryButton.addEventListener("click", function () {
+    allRepos.classList.remove("hide"); 
+    repoData.classList.add("hide"); 
+    backToGalleryButton.classList.add("hide"); 
+});
+
+//Attach input event listener to filterInput. Create a variable to capture the value of the search text. Create a variable called repos to select all elements on the page with a class of "repo". Create variable and assign it to the lowercase value of the search text. Loop through each repo inside your repos element. Inside the loop, create a variable and assign it to the lowercase value of the innerText of each repo.
+
+filterInput.addEventListener("input", function (e) {
+    const searchText = e.target.value; 
+    const repos = document.querySelectorAll(".repo"); 
+    const lowerSearchText = searchText.toLowerCase(); 
+
+    for (const repo of repos) {
+        const repoLowerText = repo.innerText.toLowerCase(); 
+        if (repoLowerText.includes(lowerSearchText)) {
+            repo.classList.remove("hide"); 
+        } else {
+            repo.classList.add("hide"); 
+        }
+    }
+
+})
