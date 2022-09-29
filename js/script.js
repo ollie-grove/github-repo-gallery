@@ -35,23 +35,22 @@ const displayInfo = function (data) {
 
     div.innerHTML = `
         <figure>
-            <img alt = "user avatar" src=${data.avatar_url} />
+            <img alt="user avatar" src=${data.avatar_url} />
         </figure>
         <div>
-            <p><strong>Name:</strong>${data.name}</p>
-            <p><strong>Bio:</strong>${data.bio}</p>
-            <p><strong>Location:</strong>${data.location}</p>
-            <p><strong>Number of public repos:</strong>${data.public_repos}</p>
+            <p><strong>Name:</strong> ${data.name}</p>
+            <p><strong>Bio:</strong> ${data.bio}</p>
+            <p><strong>Location:</strong> ${data.location}</p>
+            <p><strong>Number of public repos:</strong> ${data.public_repos}</p>
         </div>
     `;
     overview.append(div);
-    gitRepos(); 
-     
+    gitRepos(username);   
 };
 
 //Function to fetch repos. Find the parameters to sort repos by most recently updated to least updated (sort=updated), show up to 100 repos per page at a time(&per_page=100)
 
-const gitRepos = async function () {
+const gitRepos = async function (username) {
     const fetchRepos = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
     const repoData = await fetchRepos.json(); 
     //console.log(repoData); 
@@ -62,7 +61,7 @@ const gitRepos = async function () {
 //Display info about each repo. Use repos as a parameter so the function accepts the data returned from the last API call. Inside the function, loop and create a list item for each repo and give each item a class of repo and an h3 element. 
 const displayRepos = function(repos) {
     filterInput.classList.remove("hide"); 
-    for (repo of repos) {
+    for (const repo of repos) {
         const repoItem = document.createElement("li"); 
         repoItem.classList.add("repo"); 
         repoItem.innerHTML = `<h3>${repo.name}</h3>`; 
@@ -103,6 +102,7 @@ const getRepoInfo = async function(repoName) {
 //Function to display the specific repo information, should accept both parameters "repoInfo" and "languages". Inside the function, empty the html of the section class "repo-data" where the individual repo data will appear. Create a new div element and add the selected repository's name, description, default branch, and link to its code on GitHub. 
 
 const displayRepoInformation = function (repoInfo, languages) {
+    backToGalleryButton.classList.remove("hide");
     repoData.innerHTML = ""; 
     repoData.classList.remove("hide"); 
     allRepos.classList.add("hide"); 
@@ -142,4 +142,4 @@ filterInput.addEventListener("input", function (e) {
         }
     }
 
-})
+});
